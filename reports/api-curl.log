@@ -1,0 +1,87 @@
+# Date: Tue Oct 13 20:13:34 UTC 2026
+===== A1: curl http://localhost:8080/api/hello =====
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"message":"Hello, World!"}
+
+===== A2: curl -H Accept: application/json http://localhost:8080/api/hello?name=x =====
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"message":"Hello, World!"}
+
+===== A3: curl -H Accept: application/json http://localhost:8080/api/unknown =====
+HTTP/1.1 404 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"timestamp":"2026-10-13T20:13:34.184+00:00","status":404,"error":"Not Found","path":"/api/unknown"}
+
+===== A4: curl -X POST http://localhost:8080/api/hello =====
+HTTP/1.1 405 
+Allow: GET
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"timestamp":"2026-10-13T20:13:34.208+00:00","status":405,"error":"Method Not Allowed","path":"/api/hello"}
+
+===== A5-PUT: curl -X PUT http://localhost:8080/api/hello =====
+HTTP/1.1 405 
+Allow: GET
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"timestamp":"2026-10-13T20:13:34.217+00:00","status":405,"error":"Method Not Allowed","path":"/api/hello"}
+
+===== A5-DELETE: curl -X DELETE http://localhost:8080/api/hello =====
+HTTP/1.1 405 
+Allow: GET
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"timestamp":"2026-10-13T20:13:34.228+00:00","status":405,"error":"Method Not Allowed","path":"/api/hello"}
+
+===== A6: curl http://localhost:8080/api/hello/ =====
+HTTP/1.1 404 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"timestamp":"2026-10-13T20:13:34.237+00:00","status":404,"error":"Not Found","path":"/api/hello/"}
+
+===== A6-json: curl -H Accept: application/json http://localhost:8080/api/hello/ =====
+HTTP/1.1 404 
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 13 Oct 2026 20:13:34 GMT
+
+{"timestamp":"2026-10-13T20:13:34.246+00:00","status":404,"error":"Not Found","path":"/api/hello/"}
+
+===== N2: listening sockets on 8080 =====
+===== N2: lsof -i :8080 -sTCP:LISTEN =====
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+java    1454 root   36u  IPv4   5284      0t0  TCP *:http-alt (LISTEN)
+
+===== N2: lsof -i :8080 -sTCP:LISTEN (while running) =====
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+java    1454 root   36u  IPv4   5284      0t0  TCP *:http-alt (LISTEN)
+
+===== after stop: lsof -i :8080 -sTCP:LISTEN returns nothing (port free), no java/mvn processes =====
